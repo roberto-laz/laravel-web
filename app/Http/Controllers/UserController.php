@@ -3,30 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
 
-    public function index(): JsonResponse
+    public function index()
     {
         $users = User::all();
-        return view('index');
+        return view('index', compact('users'));
     }
 
 
     public function create()
     {
-        //
+        return view('create');
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
-        $message = User::create($request->all()) ?
-        "User created successfully" :
-        "An error has ocurred when creating a new user";
-        return response()->json($message);
+        $request->validate([
+                "name" => "required|max:4",
+                "email" => "required",
+                "password" => "required"
+            ]);        
+        $user = User::create($request->all());    
+        return redirect(route('users.index'));
     }
 
 
@@ -46,7 +51,7 @@ class UserController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $message = User::find($id)->update($request->all()) ?
-        "User updated" : "User not found";
+            "User updated" : "User not found";
         return response()->json($message);
     }
 
