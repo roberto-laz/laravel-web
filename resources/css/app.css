@@ -1,0 +1,10 @@
+.btn-danger.delete {
+    color: red;
+    padding: 0;
+    border: unset;
+    background: unset;
+  }
+
+  .btn-danger.edit {
+    color: blue;
+  }  

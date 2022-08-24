@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Exception;
-use Illuminate\Auth\Events\Validated;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Contracts\Session\Session;
 
 class UserController extends Controller
 {
@@ -26,39 +27,41 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-                "name" => "required|max:4",
+                "name" => "required|max:16",
                 "email" => "required",
                 "password" => "required"
             ]);        
-        $user = User::create($request->all());    
+        $user = User::create($request->all());
         return redirect(route('users.index'));
     }
 
 
-    public function show($id): JsonResponse
+    public function show($id)
     {
         $user = User::find($id);
-        return response()->json(compact('user'));
+        return view('show', compact('user'));
     }
 
 
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('edit', compact('user'));
     }
 
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, $id)
     {
         $message = User::find($id)->update($request->all()) ?
-            "User updated" : "User not found";
-        return response()->json($message);
+        ['successful_message' => 'User updated successfully'] : ['error_message' => 'Failed to update user'];
+        return redirect()->route('users.index')->with($message);
     }
 
 
-    public function destroy($id): JsonResponse
-    {
-        $message = User::destroy($id) ? "User deleted" : "User not found";
-        return response()->json($message);
+    public function destroy($id)
+    {        
+        $message = User::destroy($id) ?
+        ['successful_message' => 'User deleted successfully'] : ['error_message' => 'Failed to delete user'];
+        return redirect()->route('users.index')->with($message);
     }
 }
