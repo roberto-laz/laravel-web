@@ -28,8 +28,8 @@ class UserController extends Controller
     {
         $request->validate([
                 "name" => "required|max:16",
-                "email" => "required",
-                "password" => "required"
+                'email' => 'required|email|max:255', 
+                'password' => 'required',
             ]);        
         $user = User::create($request->all());
         return redirect(route('users.index'));
