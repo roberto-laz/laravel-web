@@ -38,31 +38,29 @@ class UserController extends Controller
     }
 
 
-    public function show(int $id): View
+    public function show(User $user): View
     {
-        $user = User::find($id);
         return view('show', compact('user'));
     }
 
 
-    public function edit(int $id): View
+    public function edit(User $user): View
     {
-        $user = User::find($id);
         return view('edit', compact('user'));
     }
 
 
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, User $user): RedirectResponse
     {
-        $message = User::find($id)->update($request->all()) ?
+        $message = $user->update($request->all()) ?
         ['successful_message' => 'User updated successfully'] : ['error_message' => 'Failed to update user'];
         return redirect()->route('users.index')->with($message);
     }
 
 
-    public function destroy(int $id): RedirectResponse
+    public function destroy(User $user): RedirectResponse
     {        
-        $message = User::destroy($id) ?
+        $message = $user->delete() ?
         ['successful_message' => 'User deleted successfully'] : ['error_message' => 'Failed to delete user'];
         return redirect()->route('users.index')->with($message);
     }
