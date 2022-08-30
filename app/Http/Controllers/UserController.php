@@ -8,23 +8,25 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
 
-    public function index()
+    public function index(): View
     {
         $users = User::all();
         return view('index', compact('users'));
     }
 
 
-    public function create()
+    public function create(): View
     {
         return view('create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
                 "name" => "required|max:16",
@@ -36,21 +38,21 @@ class UserController extends Controller
     }
 
 
-    public function show($id)
+    public function show(int $id): View
     {
         $user = User::find($id);
         return view('show', compact('user'));
     }
 
 
-    public function edit($id)
+    public function edit(int $id): View
     {
         $user = User::find($id);
         return view('edit', compact('user'));
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         $message = User::find($id)->update($request->all()) ?
         ['successful_message' => 'User updated successfully'] : ['error_message' => 'Failed to update user'];
@@ -58,7 +60,7 @@ class UserController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {        
         $message = User::destroy($id) ?
         ['successful_message' => 'User deleted successfully'] : ['error_message' => 'Failed to delete user'];

@@ -15,7 +15,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return to_route('users.index');
 });
 
 Route::resource('users', UserController::class);
