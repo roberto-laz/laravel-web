@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,13 +27,8 @@ class UserController extends Controller
         return view('create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(UserRequest $request): RedirectResponse
     {
-        $request->validate([
-                "name" => "required|max:16",
-                'email' => 'required|email|max:255', 
-                'password' => 'required',
-            ]);        
         $user = User::create($request->all());
         return redirect(route('users.index'));
     }
@@ -50,7 +46,7 @@ class UserController extends Controller
     }
 
 
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(UserRequest $request, User $user): RedirectResponse
     {
         $message = $user->update($request->all()) ?
         ['successful_message' => 'User updated successfully'] : ['error_message' => 'Failed to update user'];
