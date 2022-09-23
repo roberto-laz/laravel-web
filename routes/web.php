@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\RoberMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,34 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return to_route('users.index');
+
+Route::middleware(['secured'])->group(function () {
+    
+    Route::resource('users', UserController::class);
+
+    Route::middleware(['robertito'])->group(function () {
+        // yes you can group within a group 
+    });
+
 });
 
-Route::resource('users', UserController::class);
+Route::middleware(['noLogin'])->group(function () {
+
+    Route::get('/', function () {
+        return to_route('users.index');
+    });    
+
+    Route::get('/admin', function () {
+        return view('admin');
+    });    
+
+    Route::get('/login', function () {
+        return view('login');
+    });
+
+    Route::get('/blank', function () {
+        return view('blank');
+    });
+
+});
+
