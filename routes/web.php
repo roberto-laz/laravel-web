@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\RoberMiddleware;
@@ -19,6 +20,7 @@ use App\Http\Middleware\RoberMiddleware;
 Route::middleware(['secured'])->group(function () {
     
     Route::resource('users', UserController::class);
+    Route::resource('orders', OrderController::class);
 
     Route::middleware(['robertito'])->group(function () {
         // yes you can group within a group 
